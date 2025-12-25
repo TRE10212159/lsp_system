@@ -1,0 +1,111 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Flutter: Web Server で起動",
+      "type": "shell",
+      "command": "flutter",
+      "args": ["run", "-d", "web-server", "--web-port=8080"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Chrome で起動",
+      "type": "shell",
+      "command": "flutter",
+      "args": ["run", "-d", "chrome"],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Edge で起動",
+      "type": "shell",
+      "command": "flutter",
+      "args": ["run", "-d", "edge"],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Clean",
+      "type": "shell",
+      "command": "flutter",
+      "args": ["clean"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Web をビルド",
+      "type": "shell",
+      "command": "flutter",
+      "args": ["build", "web", "--release"],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: 依存関係をインストール",
+      "type": "shell",
+      "command": "flutter",
+      "args": ["pub", "get"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: コード生成（Riverpod）",
+      "type": "shell",
+      "command": "dart",
+      "args": [
+        "run",
+        "build_runner",
+        "build",
+        "--delete-conflicting-outputs"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: コード生成を監視（Riverpod）",
+      "type": "shell",
+      "command": "dart",
+      "args": ["run", "build_runner", "watch", "--delete-conflicting-outputs"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
+
