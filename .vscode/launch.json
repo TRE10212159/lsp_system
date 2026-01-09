@@ -1,0 +1,6 @@
+{
+  "name": "Flutter Web Wasm",
+  "request": "launch",
+  "type": "dart",
+  "args": ["--wasm"]
+}
