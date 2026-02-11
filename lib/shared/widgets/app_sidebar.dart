@@ -48,6 +48,13 @@ class _AppSidebarState extends State<AppSidebar> {
               ),
               _buildMenuItem(
                 context,
+                icon: Icons.settings,
+                title: '作業モデル管理',
+                path: RoutePaths.workModel,
+                currentLocation: currentLocation,
+              ),
+              _buildMenuItem(
+                context,
                 icon: Icons.analytics,
                 title: '必要人時予測',
                 path: RoutePaths.workforceForecast,
@@ -65,13 +72,6 @@ class _AppSidebarState extends State<AppSidebar> {
                 icon: Icons.assignment,
                 title: '作業割当',
                 path: RoutePaths.workAssignment,
-                currentLocation: currentLocation,
-              ),
-              _buildMenuItem(
-                context,
-                icon: Icons.settings,
-                title: '作業モデル管理',
-                path: RoutePaths.workModel,
                 currentLocation: currentLocation,
               ),
               _buildExpandableMenuItem(
