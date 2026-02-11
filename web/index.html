@@ -56,9 +56,48 @@
       rel="manifest"
       href="manifest.json"
     />
+    <!-- Debug 時の画面上部の青いローディングバーを非表示（Release では元々表示されない） -->
+    <style>
+      @keyframes flutter-loading-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      #flutter-loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      #flutter-loading > div {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #e3f2fd;
+        border-top-color: #1976d2;
+        border-radius: 50%;
+        animation: flutter-loading-spin 0.8s linear infinite;
+      }
+      #flutter-loading > p {
+        margin-top: 16px;
+        font-size: 16px;
+        color: #424242;
+      }
+      .flutter-loader {
+        display: none !important;
+      }
+    </style>
   </head>
 
   <body>
+    <!-- Flutter ロード前に表示するプレースホルダー（初回表示の白空白を軽減） -->
+    <div id="flutter-loading">
+      <div></div>
+      <p>読み込み中...</p>
+    </div>
     <script
       src="flutter_bootstrap.js"
       async

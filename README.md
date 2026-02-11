@@ -1,299 +1,170 @@
 # LSP System
 
-労働力管理システム（Labor Service Planning System）
+Flutter 製の**人材・稼働計画システム**。**Web** と **Android** 向けにビルドし、必要人時予測・稼働計画・作業割当・進捗管理・個人サービスなどを提供します。
 
-## 概要
+---
 
-LSP System は、Flutter で構築されたクロスプラットフォーム対応の労働力管理システムです。
-作業計画、進捗管理、分析レポートなど、包括的な労働力管理機能を提供します。
+## 機能モジュール
 
-## 対応プラットフォーム
+| モジュール       | 説明                                                         |
+| ---------------- | ------------------------------------------------------------ |
+| **認証**         | ログインと認証                                               |
+| **ホーム**       | メインナビゲーションとウェルカム画面                         |
+| **人力計画**     | 必要人時予測、稼働計画、作業割当                             |
+| **作業モデル**   | 作業モデル管理                                               |
+| **進捗管理**     | 個人作業実績、MGR 作業進捗、作業完了率                       |
+| **分析レポート** | 予算計画実績契約分析、必要人時と契約差異、人時生産性         |
+| **個人サービス** | 個人計画修正、希望休・希望時間申請、有給・時間変更申請、応募 |
 
-- ✅ Web (Chrome, Firefox, Safari, Edge)
-- ✅ Android (API 21+)
-- ✅ iOS (iOS 12+)
-- ✅ Windows (Windows 10+)
-- ✅ macOS (macOS 10.14+)
-- ✅ Linux (Ubuntu 20.04+)
+---
 
 ## 技術スタック
 
-- **Flutter**: 3.7.2+
-- **Dart**: 3.7.2+
-- **go_router**: 14.6.2
-- **Riverpod**: 2.6.1
-- **SharedPreferences**: 2.3.3
+- **フレームワーク**: Flutter（SDK ^3.7.2）
+- **ルーティング**: [go_router](https://pub.dev/packages/go_router) ^14.6.2
+- **状態管理**: [flutter_riverpod](https://pub.dev/packages/flutter_riverpod) + [riverpod_annotation](https://pub.dev/packages/riverpod_annotation)。`build_runner` / `riverpod_generator` によるコード生成を利用
+- **ローカルストレージ**: [shared_preferences](https://pub.dev/packages/shared_preferences)
+- **コード規約**: `flutter_lints`、`riverpod_lint`
 
-## セットアップ
+---
 
-### 必要な環境
+## 環境要件
 
-- Flutter SDK 3.7.2 以上
-- Dart SDK 3.7.2 以上
+- [Flutter](https://flutter.dev) 3.7.2 以上（Dart 3.7.2+ 含む）
+- 任意: Android Studio / VS Code + Flutter 拡張で開発・デバッグ
 
-### インストール手順
+---
 
-1. リポジトリをクローン
+## インストールと実行
+
+### 1. リポジトリのクローンと移動
 
 ```bash
 git clone <repository-url>
 cd lsp_system
 ```
 
-2. 依存関係をインストール
+### 2. 依存関係のインストール
 
 ```bash
 flutter pub get
 ```
 
-3. コード生成を実行
+### 3. コード生成（Riverpod / Router など）
 
 ```bash
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 ```
 
-## 起動方法
+### 4. プロジェクトの起動
 
-### 🚀 クイックスタート（推奨）
-
-**最も簡単な方法:**
-
-```cmd
-# Web Server モードで起動
-.\dev.bat web
-```
-
-ブラウザで `http://localhost:8080` を開く
-
-**またはダブルクリック:**
-
-`run.bat` をダブルクリックして起動
-
-### その他の起動方法
-
-**Makefile を使用:**
+**推奨**: Chrome でポート **8080** を指定して起動します。
 
 ```bash
-make web          # Web Server モード
-make web-chrome   # Chrome で起動
-make help         # すべてのコマンドを表示
+flutter run -d chrome --web-port 8080
 ```
 
-**PowerShell を使用:**
+起動後、ブラウザで **http://localhost:8080** にアクセスするとアプリが表示されます。
 
-```powershell
-.\scripts\dev.ps1 web       # Web Server モード
-.\scripts\dev.ps1 chrome    # Chrome で起動
-```
-
-**VS Code を使用:**
-
-1. `Ctrl + Shift + P` を押す
-2. "Tasks: Run Task" を選択
-3. "Flutter: Web Server で起動" を選択
-
-**従来の Flutter コマンド:**
+Android で実行する場合:
 
 ```bash
-# Web Server モード（推奨）
-flutter run -d web-server --web-port=8080
-
-# Chrome で起動
-flutter run -d chrome
+flutter run -d android
 ```
 
-### Windows
+### 5. Dart DevTools でのデバッグ
+
+アプリ起動後、以下のいずれかの方法で Dart DevTools を開いてデバッグできます。
+
+#### 方法 A: ターミナルに表示される URL から開く（最も簡単）
+
+1. `flutter run -d chrome --web-port 8080` でアプリを起動する。
+2. ターミナルに次のようなメッセージが表示される:
+   ```text
+   The Flutter DevTools debugger and profiler on Chrome is available at: http://127.0.0.1:xxxxx/...
+   ```
+3. その **URL をブラウザで開く**と Dart DevTools が起動する。
+4. DevTools では **Inspector**（ウィジェットツリー）、**Performance**、**Network**、**Logging** などでデバッグ可能。
+
+#### 方法 B: 別ターミナルから `dart devtools` で接続する
+
+1. アプリを `flutter run -d chrome --web-port 8080` で起動したままにする。
+2. **別のターミナル**で以下を実行:
+   ```bash
+   dart devtools
+   ```
+3. デフォルトでブラウザが開き、DevTools の画面が表示される。  
+   「**Connect**」または「**アプリを選択**」から、実行中の **Chrome (lsp_system)** を選ぶ。
+4. 接続されると、同じく Inspector / Performance / Network などでデバッグできる。
+
+#### 方法 C: VS Code / Cursor から開く
+
+1. アプリを F5 または「デバッグの開始」で起動している場合、**デバッグツールバー**に「**Dart: Open DevTools**」または「**Flutter: Open DevTools**」が表示されることがある。
+2. それをクリックするか、コマンドパレット（`Ctrl+Shift+P`）で「**Flutter: Open DevTools**」を実行する。
+3. 実行中のアプリに自動で接続され、DevTools が開く。
+
+#### DevTools でよく使う機能
+
+| 機能            | 用途                                                 |
+| --------------- | ---------------------------------------------------- |
+| **Inspector**   | ウィジェットツリーの確認、レイアウト・スタイルの検証 |
+| **Performance** | フレームレート、CPU 使用率、タイムライン計測         |
+| **Network**     | Web 版での HTTP リクエストの確認                     |
+| **Logging**     | `debugPrint` / `print` のログ確認                    |
+
+### 6. ビルド成果物
 
 ```bash
-flutter run -d windows
-```
-
-### モバイル (デバイスまたはエミュレーターが必要)
-
-```bash
-flutter run
-```
-
-### 📋 すべてのコマンド
-
-詳細は以下を参照:
-
-- **[COMMANDS.md](COMMANDS.md)** - 簡潔なコマンドリファレンス
-- **[QUICK_START.md](QUICK_START.md)** - 詳細なクイックスタートガイド
-
-## ログイン情報
-
-開発環境用のテストアカウント：
-
-- **ユーザー名**: `admin`
-- **パスワード**: `admin`
-
-## UI構造
-
-### サイドバーナビゲーション
-
-- 左側固定サイドバー（デスクトップ）
-- ドロワーメニュー（モバイル）
-- 展開可能な階層メニュー
-- 現在ページのハイライト表示
-
-### シングルページアプリケーション（SPA）
-
-- URL変更による直接アクセス可能
-- ブラウザの戻る/進むボタン対応
-- ページ遷移時もサイドバーを維持
-
-## 主な機能
-
-### 労働力計画
-
-- 必要人時予測
-- 稼働計画
-- 作業割当
-
-### 作業管理
-
-- 作業モデル管理
-- 作業実績進捗管理（展開メニュー）
-  - 個人作業実績管理
-  - MGR 作業進捗管理
-  - 作業完了率
-
-### 分析機能（展開メニュー）
-
-- 予算計画実績契約分析
-- 必要人時と契約差異分析
-- 人時生産性
-
-### 個人サービス（展開メニュー）
-
-- 個人計画修正
-- 希望休みや希望時間申請
-- 有給・時間変更申請
-- 応募
-
-## プロジェクト構造
-
-```
-lib/
-├── main.dart                 # エントリーポイント
-├── app.dart                  # ルートウィジェット
-├── router/                   # ルーティング設定
-├── features/                 # 機能モジュール
-├── shared/                   # 共有コンポーネント
-└── core/                     # コア機能
-```
-
-詳細は [プロジェクトアーキテクチャ](document/プロジェクトアーキテクチャ.md) を参照してください。
-
-## ドキュメント
-
-### クイックスタート
-
-- **[COMMANDS.md](COMMANDS.md)** - コマンドクイックリファレンス
-- **[QUICK_START.md](QUICK_START.md)** - 詳細なクイックスタートガイド
-
-### 開発ガイド
-
-- [開発用コマンド一覧](document/開発用コマンド一覧.md)
-- [Flutter Web起動問題の解決方法](document/Flutter%20Web起動問題の解決方法.md)
-- [Flutter Web様式検査問題の解決](document/Flutter%20Web様式検査問題の解決.md)
-
-### アーキテクチャ
-
-- [プロジェクトアーキテクチャ](document/プロジェクトアーキテクチャ.md)
-- [ルーティング設定書](document/ルーティング設定書.md)
-- [実装完了報告書](document/実装完了報告書.md)
-- [サイドバーナビゲーション実装報告書](document/サイドバーナビゲーション実装報告書.md)
-
-## 開発
-
-### クイックコマンド
-
-```cmd
-.\dev.bat web       # Web 起動
-.\dev.bat clean     # クリーン
-.\dev.bat build     # ビルド
-.\dev.bat generate  # コード生成
-.\dev.bat watch     # コード生成監視
-```
-
-または Makefile を使用:
-
-```bash
-make web       # Web 起動
-make clean     # クリーン
-make build-web # ビルド
-make generate  # コード生成
-make watch     # コード生成監視
-make analyze   # コード分析
-make format    # フォーマット
-```
-
-### コード生成
-
-Riverpod のコード生成を実行:
-
-```bash
-.\dev.bat generate
-# または
-flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-監視モードで自動生成:
-
-```bash
-.\dev.bat watch
-# または
-flutter pub run build_runner watch --delete-conflicting-outputs
-```
-
-### コード品質チェック
-
-```bash
-make analyze
-# または
-flutter analyze
-```
-
-### フォーマット
-
-```bash
-make format
-# または
-dart format lib/
-```
-
-## ビルド
-
-### Web
-
-```bash
+# Web ビルド
 flutter build web
-```
 
-### Windows
-
-```bash
-flutter build windows
-```
-
-### Android
-
-```bash
+# Android ビルド（APK）
 flutter build apk
 ```
 
-### iOS
+成果物は **Web** が `build/web`、**Android** が `build/app/outputs/flutter-apk/` に出力されます。
 
-```bash
-flutter build ios
+---
+
+## プロジェクト構成
+
 ```
+lib/
+├── main.dart               # アプリケーションエントリーポイント、ProviderScope
+├── app.dart                # ルートウィジェット、認証と MaterialApp.router
+├── router/                 # go_router 設定とルート定義
+├── core/                   # コアサービス（storage など）
+├── shared/                 # 共通定数、テーマ、共通ウィジェット（Scaffold、サイドバーなど）
+└── features/               # 機能別モジュール
+    ├── auth/               # ログイン、ユーザーモデル、認証 Provider
+    ├── home/               # ホーム
+    ├── workforce_planning/ # 人力計画（予測、稼働計画、作業割当）
+    ├── work_model/         # 作業モデル
+    ├── progress/           # 進捗（個人 / MGR / 完了率）
+    ├── analytics/          # 分析（予算、差異、生産性）
+    └── personal/           # 個人サービス（計画修正、休暇・時間申請、応募）
+```
+
+---
+
+## 開発上の注意
+
+- **ドキュメント**: プロジェクト関連ドキュメントは `./document` に格納する。
+- **コメントとコミット**: リポジトリルートの `.cursorrules` を参照（コメント規約、Conventional Commits など）。
+- **静的解析**: `analysis_options.yaml` で `flutter_lints` を有効化済み。コミット前に以下を実行することを推奨します。
+
+  ```bash
+  flutter analyze
+  ```
+
+---
+
+## バージョン
+
+現在のバージョン: **1.0.0+1**（`pubspec.yaml` に準拠）。
+
+---
 
 ## ライセンス
 
-このプロジェクトはプライベートプロジェクトです。
-
-## サポート
-
-問題や質問がある場合は、プロジェクトの Issue セクションで報告してください。
+本プロジェクトはプライベートリポジトリであり、pub.dev には公開していません（`publish_to: 'none'`）。利用・再配布は所属組織のライセンスに従ってください。
