@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lsp_system/constants/routes.dart';
 import '../providers/auth_provider.dart';
 
 /// ログインページ
@@ -30,6 +31,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       return;
     }
 
+    if (!mounted) return;
     setState(() {
       _isLoading = true;
     });
@@ -41,14 +43,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
       if (mounted) {
         if (success) {
-          context.go('/home');
+          context.go(Routes.home.value);
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('ログインに失敗しました'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('ログインに失敗しました'), backgroundColor: Colors.red));
         }
       }
     } finally {
@@ -74,17 +73,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(
-                    Icons.business,
-                    size: 80,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  Icon(Icons.business, size: 80, color: Theme.of(context).colorScheme.primary),
                   const SizedBox(height: 24),
                   Text(
                     'LSP System',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 48),
@@ -121,16 +114,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   const SizedBox(height: 24),
                   FilledButton(
                     onPressed: _isLoading ? null : _handleLogin,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
+                    style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
                     child:
                         _isLoading
-                            ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
+                            ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
                             : const Text('ログイン'),
                   ),
                   const SizedBox(height: 16),

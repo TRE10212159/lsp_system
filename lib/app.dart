@@ -60,14 +60,14 @@ class App extends ConsumerWidget {
             title: 'LSP System',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.blue,
+                seedColor: const Color(0xFF21417b),
                 brightness: Brightness.light,
               ),
               useMaterial3: true,
             ),
             darkTheme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.blue,
+                seedColor: const Color(0xFF21417b),
                 brightness: Brightness.dark,
               ),
               useMaterial3: true,

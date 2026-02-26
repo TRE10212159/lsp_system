@@ -1,254 +1,184 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../constants/route_paths.dart';
+import 'package:lsp_system/constants/base_states.dart';
+import 'package:lsp_system/constants/dictionary.dart';
+import 'package:lsp_system/constants/routes.dart';
+import 'icons.dart';
 
-/// アプリケーションのサイドバーナビゲーション
 class AppSidebar extends StatefulWidget {
   const AppSidebar({super.key});
+  static final double expandedWidth = 280;
+  static final double collapsedWidth = 68;
 
   @override
   State<AppSidebar> createState() => _AppSidebarState();
 }
 
 class _AppSidebarState extends State<AppSidebar> {
-  String? _expandedMenu;
+  bool collapsed = false;
+  Set<String> expandedMenus = {};
+
+  void setStates(VoidCallback callback) => mounted ? setState(callback) : null;
 
   @override
   Widget build(BuildContext context) {
-    final currentLocation = GoRouterState.of(context).uri.toString();
-    final isDesktop = MediaQuery.of(context).size.width >= 1024;
-
-    final sidebarContent = Column(
-      children: [
-        /// ヘッダー
-        Container(
-          width: double.infinity,
-          height: kToolbarHeight,
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          color: Theme.of(context).colorScheme.primary,
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'LSPシステム',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontWeight: FontWeight.bold,
-            ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 0),
+      width: collapsed ? AppSidebar.collapsedWidth : AppSidebar.expandedWidth,
+      decoration: BoxDecoration(border: Border(right: BorderSide(color: Colors.transparent, width: 1))),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          textTheme: TextTheme(titleLarge: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold)),
+          iconTheme: IconThemeData(color: Colors.white, size: 16.0),
+          hoverColor: Color(0x22000000),
+          listTileTheme: ListTileThemeData(
+            selectedTileColor: const Color(0x11ffffff),
+            textColor: Colors.white,
+            selectedColor: Colors.white,
+            horizontalTitleGap: 4,
           ),
         ),
-        Expanded(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              _buildMenuItem(
-                context,
-                icon: Icons.home,
-                title: 'ホーム',
-                path: RoutePaths.home,
-                currentLocation: currentLocation,
+        child: Builder(
+          builder: (context) {
+            return Drawer(
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
+                child: Column(children: [buildSidebarTitle(context), Expanded(child: buildMenu(context))]),
               ),
-              _buildMenuItem(
-                context,
-                icon: Icons.settings,
-                title: '作業モデル管理',
-                path: RoutePaths.workModel,
-                currentLocation: currentLocation,
-              ),
-              _buildMenuItem(
-                context,
-                icon: Icons.analytics,
-                title: '必要人時予測',
-                path: RoutePaths.workforceForecast,
-                currentLocation: currentLocation,
-              ),
-              _buildMenuItem(
-                context,
-                icon: Icons.calendar_today,
-                title: '稼働計画',
-                path: RoutePaths.operationPlan,
-                currentLocation: currentLocation,
-              ),
-              _buildMenuItem(
-                context,
-                icon: Icons.assignment,
-                title: '作業割当',
-                path: RoutePaths.workAssignment,
-                currentLocation: currentLocation,
-              ),
-              _buildExpandableMenuItem(
-                context,
-                icon: Icons.trending_up,
-                title: '作業実績進捗管理',
-                menuKey: 'progress',
-                currentLocation: currentLocation,
-                children: [
-                  _buildSubMenuItem(
-                    context,
-                    title: '個人作業実績管理',
-                    path: RoutePaths.progressPersonal,
-                    currentLocation: currentLocation,
-                  ),
-                  _buildSubMenuItem(
-                    context,
-                    title: 'MGR作業進捗管理',
-                    path: RoutePaths.progressManager,
-                    currentLocation: currentLocation,
-                  ),
-                  _buildSubMenuItem(
-                    context,
-                    title: '作業完了率',
-                    path: RoutePaths.progressCompletionRate,
-                    currentLocation: currentLocation,
-                  ),
-                ],
-              ),
-              _buildExpandableMenuItem(
-                context,
-                icon: Icons.bar_chart,
-                title: '分析レポート',
-                menuKey: 'analytics',
-                currentLocation: currentLocation,
-                children: [
-                  _buildSubMenuItem(
-                    context,
-                    title: '予算計画実績契約分析',
-                    path: RoutePaths.analyticsBudget,
-                    currentLocation: currentLocation,
-                  ),
-                  _buildSubMenuItem(
-                    context,
-                    title: '必要人時と契約差異分析',
-                    path: RoutePaths.analyticsVariance,
-                    currentLocation: currentLocation,
-                  ),
-                  _buildSubMenuItem(
-                    context,
-                    title: '人時生産性',
-                    path: RoutePaths.analyticsProductivity,
-                    currentLocation: currentLocation,
-                  ),
-                ],
-              ),
-              _buildExpandableMenuItem(
-                context,
-                icon: Icons.person,
-                title: 'デジタル個人サービス',
-                menuKey: 'personal',
-                currentLocation: currentLocation,
-                children: [
-                  _buildSubMenuItem(
-                    context,
-                    title: '個人計画修正',
-                    path: RoutePaths.personalPlanRevision,
-                    currentLocation: currentLocation,
-                  ),
-                  _buildSubMenuItem(
-                    context,
-                    title: '希望休みや希望時間申請',
-                    path: RoutePaths.personalLeaveRequest,
-                    currentLocation: currentLocation,
-                  ),
-                  _buildSubMenuItem(
-                    context,
-                    title: '有給・時間変更申請',
-                    path: RoutePaths.personalScheduleChange,
-                    currentLocation: currentLocation,
-                  ),
-                  _buildSubMenuItem(
-                    context,
-                    title: '応募',
-                    path: RoutePaths.personalApplication,
-                    currentLocation: currentLocation,
-                  ),
-                ],
-              ),
-            ],
-          ),
+            );
+          },
         ),
-      ],
+      ),
     );
+  }
 
-    /// デスクトップ: Materialウィジェット
-    if (isDesktop) {
-      return Material(
-        color: Theme.of(context).colorScheme.surface,
-        child: sidebarContent,
+  Widget buildSidebarTitle(BuildContext context) {
+    if (collapsed) {
+      return SizedBox(
+        width: double.infinity,
+        height: kToolbarHeight,
+        child: Center(
+          child: IconButton(icon: ChevronRightIcon(size: 16), onPressed: () => setStates(() => collapsed = false)),
+        ),
       );
     }
 
-    /// モバイル: Drawerウィジェット
-    return Drawer(child: sidebarContent);
-  }
-
-  /// メニューアイテムを構築
-  Widget _buildMenuItem(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String path,
-    required String currentLocation,
-  }) {
-    final isSelected = currentLocation == path;
-
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      selected: isSelected,
-      onTap: () {
-        context.go(path);
-        if (Scaffold.of(context).isDrawerOpen) {
-          Navigator.of(context).pop();
-        }
-      },
+    final title = Text(
+      Dictionary.appName.t(),
+      style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),
+    );
+    final iconButton = IconButton(icon: ChevronLeftIcon(size: 16), onPressed: () => setStates(() => collapsed = true));
+    return SizedBox(
+      width: double.infinity,
+      height: kToolbarHeight,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(left: 0, right: 0, child: Center(child: title)),
+          Positioned(right: 16, top: 0, bottom: 0, child: Center(child: iconButton)),
+        ],
+      ),
     );
   }
 
-  /// 展開可能なメニューアイテムを構築
-  Widget _buildExpandableMenuItem(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String menuKey,
-    required String currentLocation,
-    required List<Widget> children,
-  }) {
-    final isExpanded = _expandedMenu == menuKey;
-
-    return Column(
-      children: [
-        ListTile(
-          leading: Icon(icon),
-          title: Text(title),
-          trailing: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
-          onTap: () {
-            setState(() {
-              _expandedMenu = isExpanded ? null : menuKey;
-            });
-          },
-        ),
-        if (isExpanded) ...children,
-      ],
+  Material buildMenu(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          // ホーム
+          buildRouterLink(context, HouseIcon(), Routes.home),
+          // 作業モデル管理
+          buildRouterLink(context, CubesIcon(), Routes.workModel),
+          // 直近物量変動人時予測
+          buildExpandableItem(context, ChartLineIcon(), Routes.workforceForecast, [
+            // レジ人時予測
+            buildRouterLink(context, CalculatorIcon(), Routes.workforceForecastRegister),
+            // 夜間人時予測
+            buildRouterLink(context, MoonIcon(), Routes.workforceForecastNight),
+            // 生鮮製造人時予測
+            buildRouterLink(context, UtensilsIcon(), Routes.workforceForecastFreshManufacturing),
+          ]),
+          // 稼働計画
+          buildRouterLink(context, CalendarDaysIcon(), Routes.operationPlan),
+          // 作業割当
+          buildRouterLink(context, ListUlIcon(), Routes.workAssignment),
+          // 作業実績進捗管理
+          buildExpandableItem(context, ChartBarIcon(), Routes.progress, [
+            // 予算計画実績合同分析
+            buildRouterLink(context, UserIcon(), Routes.progressPersonal),
+            // MGR作業進捗管理
+            buildRouterLink(context, UsersIcon(), Routes.progressManager),
+          ]),
+          // 分析レポート
+          buildExpandableItem(context, FileLinesIcon(), Routes.analytics, [
+            // 予算計画実績契約分析
+            buildRouterLink(context, ChartBarIcon(), Routes.analyticsBudget),
+            // 必要人時と契約差異分析
+            buildRouterLink(context, ChartLineIcon(), Routes.analyticsVariance),
+            // 人時生産性
+            buildRouterLink(context, CalculatorIcon(), Routes.analyticsProductivity),
+          ]),
+          // 個人サービス
+          buildExpandableItem(context, UserIcon(), Routes.personalServices, [
+            // 個人計画修正
+            buildRouterLink(context, PenToSquareIcon(), Routes.personalPlanRevision),
+            // 希望休・希望時間申請
+            buildRouterLink(context, CalendarCheckIcon(), Routes.personalLeaveRequest),
+            // 有給・時間変更申請
+            buildRouterLink(context, ClockIcon(), Routes.personalScheduleChange),
+            // 応募
+            buildRouterLink(context, BriefcaseIcon(), Routes.personalApplication),
+          ]),
+        ],
+      ),
     );
   }
 
-  /// サブメニューアイテムを構築
-  Widget _buildSubMenuItem(
-    BuildContext context, {
-    required String title,
-    required String path,
-    required String currentLocation,
-  }) {
-    final isSelected = currentLocation == path;
+  Widget buildRouterLink(BuildContext context, Widget prefix, BaseOption option) {
+    final isActive = GoRouterState.of(context).uri.toString() == option.value;
 
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 72, right: 16),
-      title: Text(title),
-      selected: isSelected,
-      onTap: () {
-        context.go(path);
-        if (Scaffold.of(context).isDrawerOpen) {
-          Navigator.of(context).pop();
-        }
-      },
-    );
+    final shape = Border(left: BorderSide(color: isActive ? Color(0xFF4caf50) : Colors.transparent, width: 4));
+
+    void onTap() => context.go(option.value);
+
+    if (collapsed) {
+      return Tooltip(
+        message: option.label,
+        child: ListTile(selected: isActive, shape: shape, title: Center(child: prefix), onTap: onTap),
+      );
+    }
+    return ListTile(leading: prefix, title: Text(option.label), selected: isActive, onTap: onTap, shape: shape);
+  }
+
+  Widget buildExpandableItem(BuildContext context, Widget prefix, BaseOption option, List<Widget> children) {
+    Widget? child;
+    Widget? menuItem;
+    Widget? suffix;
+    VoidCallback? onTap;
+    if (!collapsed) {
+      if (expandedMenus.contains(option.value)) {
+        suffix = ChevronUpIcon(size: 12);
+        onTap = () => setStates(() => expandedMenus.remove(option.value));
+        ThemeData theme = Theme.of(context);
+        ListTileThemeData listTileTheme = theme.listTileTheme.copyWith(contentPadding: EdgeInsets.only(left: 32));
+        child = Container(
+          decoration: BoxDecoration(color: const Color(0x22000000)),
+          child: Theme(data: theme.copyWith(listTileTheme: listTileTheme), child: Column(children: children)),
+        );
+      } else {
+        suffix = ChevronDownIcon(size: 12);
+        onTap = () => setStates(() => expandedMenus.add(option.value));
+        child = null;
+      }
+      menuItem = ListTile(leading: prefix, trailing: suffix, title: Text(option.value), onTap: onTap);
+    } else {
+      menuItem = Tooltip(message: option.value, child: ListTile(title: Center(child: prefix)));
+    }
+    return Column(children: [menuItem, if (child != null) child]);
   }
 }
