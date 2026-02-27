@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// 默认图标颜色
-const Color _defaultIconColor = Color(0xFF1e3a8a);
+const Color _defaultIconColor = Color(0xFF21417B);
 
 /// 默认图标尺寸
-const double _defaultIconSize = 14.0;
+const double _defaultIconSize = 24.0;
 
 /// 正方形图标基座：固定宽高为 [size]，内部居中绘制图标，可传 [color] 与 [size]。
 class _SquareIcon extends StatelessWidget {
@@ -25,7 +25,24 @@ class _SquareIcon extends StatelessWidget {
   }
 }
 
-// --- 全局图标组件（正方形，默认颜色 #1e3a8a，默认尺寸 14，命名格式 XxxIcon）---
+// --- 全局图标组件（正方形，默认颜色 #21417B，默认尺寸 24，命名格式 XxxIcon）---
+
+class LoadingIcon extends StatelessWidget {
+  const LoadingIcon({super.key, this.color, this.size});
+
+  final Color? color;
+  final double? size;
+
+  @override
+  Widget build(BuildContext context) {
+    final IconThemeData theme = Theme.of(context).iconTheme;
+    final Color color = this.color ?? theme.color ?? _defaultIconColor;
+    final double size = this.size ?? theme.size ?? _defaultIconSize;
+    return Center(
+      child: SizedBox(width: size, height: size, child: CircularProgressIndicator(strokeWidth: 2, color: color)),
+    );
+  }
+}
 
 class ChevronLeftIcon extends StatelessWidget {
   const ChevronLeftIcon({super.key, this.color, this.size});
@@ -205,8 +222,7 @@ class CalendarCheckIcon extends StatelessWidget {
   final double? size;
 
   @override
-  Widget build(BuildContext context) =>
-      _SquareIcon(icon: FontAwesomeIcons.calendarCheck, color: color, size: size);
+  Widget build(BuildContext context) => _SquareIcon(icon: FontAwesomeIcons.calendarCheck, color: color, size: size);
 }
 
 class ClockIcon extends StatelessWidget {

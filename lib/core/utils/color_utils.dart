@@ -68,102 +68,48 @@ class ColorUtils {
 
   /// 设置新的亮度（HSL 的 L）[0.0, 1.0]
   static Color withBrightness(Color color, double lightness) {
-    final hsl = _rgbToHsl(
-      (color.r * 255).round(),
-      (color.g * 255).round(),
-      (color.b * 255).round(),
-    );
+    final hsl = _rgbToHsl((color.r * 255).round(), (color.g * 255).round(), (color.b * 255).round());
     final rgb = _hslToRgb(hsl.$1, hsl.$2, lightness.clamp(0.0, 1.0));
-    return Color.fromARGB(
-      (color.a * 255).round().clamp(0, 255),
-      rgb.$1,
-      rgb.$2,
-      rgb.$3,
-    );
+    return Color.fromARGB((color.a * 255).round().clamp(0, 255), rgb.$1, rgb.$2, rgb.$3);
   }
 
   /// 在原有亮度上增加 [delta]，正数变亮、负数变暗，结果限制在 [0, 1]
   static Color adjustBrightness(Color color, double delta) {
-    final hsl = _rgbToHsl(
-      (color.r * 255).round(),
-      (color.g * 255).round(),
-      (color.b * 255).round(),
-    );
+    final hsl = _rgbToHsl((color.r * 255).round(), (color.g * 255).round(), (color.b * 255).round());
     final newL = (hsl.$3 + delta).clamp(0.0, 1.0);
     final rgb = _hslToRgb(hsl.$1, hsl.$2, newL);
-    return Color.fromARGB(
-      (color.a * 255).round().clamp(0, 255),
-      rgb.$1,
-      rgb.$2,
-      rgb.$3,
-    );
+    return Color.fromARGB((color.a * 255).round().clamp(0, 255), rgb.$1, rgb.$2, rgb.$3);
   }
 
   /// 设置新的饱和度（HSL 的 S）[0.0, 1.0]
   static Color withSaturation(Color color, double saturation) {
-    final hsl = _rgbToHsl(
-      (color.r * 255).round(),
-      (color.g * 255).round(),
-      (color.b * 255).round(),
-    );
+    final hsl = _rgbToHsl((color.r * 255).round(), (color.g * 255).round(), (color.b * 255).round());
     final rgb = _hslToRgb(hsl.$1, saturation.clamp(0.0, 1.0), hsl.$3);
-    return Color.fromARGB(
-      (color.a * 255).round().clamp(0, 255),
-      rgb.$1,
-      rgb.$2,
-      rgb.$3,
-    );
+    return Color.fromARGB((color.a * 255).round().clamp(0, 255), rgb.$1, rgb.$2, rgb.$3);
   }
 
   /// 在原有饱和度上增加 [delta]，结果限制在 [0, 1]
   static Color adjustSaturation(Color color, double delta) {
-    final hsl = _rgbToHsl(
-      (color.r * 255).round(),
-      (color.g * 255).round(),
-      (color.b * 255).round(),
-    );
+    final hsl = _rgbToHsl((color.r * 255).round(), (color.g * 255).round(), (color.b * 255).round());
     final newS = (hsl.$2 + delta).clamp(0.0, 1.0);
     final rgb = _hslToRgb(hsl.$1, newS, hsl.$3);
-    return Color.fromARGB(
-      (color.a * 255).round().clamp(0, 255),
-      rgb.$1,
-      rgb.$2,
-      rgb.$3,
-    );
+    return Color.fromARGB((color.a * 255).round().clamp(0, 255), rgb.$1, rgb.$2, rgb.$3);
   }
 
   /// 设置新的色相（HSL 的 H）[0.0, 360.0] 或 [0.0, 1.0] 按需使用
   static Color withHue(Color color, double hue) {
     final h = hue % 360.0;
-    final hsl = _rgbToHsl(
-      (color.r * 255).round(),
-      (color.g * 255).round(),
-      (color.b * 255).round(),
-    );
+    final hsl = _rgbToHsl((color.r * 255).round(), (color.g * 255).round(), (color.b * 255).round());
     final rgb = _hslToRgb(h, hsl.$2, hsl.$3);
-    return Color.fromARGB(
-      (color.a * 255).round().clamp(0, 255),
-      rgb.$1,
-      rgb.$2,
-      rgb.$3,
-    );
+    return Color.fromARGB((color.a * 255).round().clamp(0, 255), rgb.$1, rgb.$2, rgb.$3);
   }
 
   /// 在原有色相上增加 [delta] 度
   static Color adjustHue(Color color, double delta) {
-    final hsl = _rgbToHsl(
-      (color.r * 255).round(),
-      (color.g * 255).round(),
-      (color.b * 255).round(),
-    );
+    final hsl = _rgbToHsl((color.r * 255).round(), (color.g * 255).round(), (color.b * 255).round());
     final newH = (hsl.$1 + delta) % 360.0;
     final rgb = _hslToRgb(newH, hsl.$2, hsl.$3);
-    return Color.fromARGB(
-      (color.a * 255).round().clamp(0, 255),
-      rgb.$1,
-      rgb.$2,
-      rgb.$3,
-    );
+    return Color.fromARGB((color.a * 255).round().clamp(0, 255), rgb.$1, rgb.$2, rgb.$3);
   }
 
   // --- 综合：一次设置多项 ---
@@ -247,11 +193,7 @@ class ColorUtils {
       g = _hueToRgb(p, q, h);
       b = _hueToRgb(p, q, h - 1 / 3.0);
     }
-    return (
-      (r * 255).round().clamp(0, 255),
-      (g * 255).round().clamp(0, 255),
-      (b * 255).round().clamp(0, 255),
-    );
+    return ((r * 255).round().clamp(0, 255), (g * 255).round().clamp(0, 255), (b * 255).round().clamp(0, 255));
   }
 
   static double _hueToRgb(double p, double q, double t) {

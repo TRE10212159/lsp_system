@@ -39,6 +39,9 @@ dependencies:
   font_awesome_flutter: ^10.8.0
   riverpod_annotation: ^2.6.1
   shared_preferences: ^2.3.3
+  day: ^0.8.0
+  web: ^1.1.1
+  universal_web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
