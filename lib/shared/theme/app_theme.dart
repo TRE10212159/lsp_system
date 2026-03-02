@@ -9,7 +9,7 @@ class AppTheme {
         style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
       ),
       useMaterial3: true,
-      hoverColor: Color(0x22000000),
+      hoverColor: Color(0x11000000),
       colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF21417B), brightness: Brightness.light),
     );
 
@@ -34,6 +34,5 @@ class AppTheme {
     IconThemeData iconTheme = themeData.iconTheme.copyWith(color: themeData.colorScheme.primary, size: 24);
 
     return themeData.copyWith(textTheme: textTheme, iconTheme: iconTheme);
-    // return themeData;
   }
 }
